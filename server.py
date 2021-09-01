@@ -2,7 +2,7 @@ from socket import *
 import threading
 
 HOST = "127.0.0.1"
-PORT = 5001
+PORT = 5003
 
 s = socket(AF_INET, SOCK_STREAM)
 s.bind((HOST, PORT))
@@ -13,8 +13,9 @@ names = []
 connections = []
 
 def broadcast(message):
-    for client in clients:
-        client.send(("broadcast" "/" + message).encode())
+    print("Bro")
+    # for client in clients:
+    #     client.send(("broadcast" "/" + message).encode())
 
 def receive():
     while True:
@@ -39,7 +40,7 @@ def receive():
 def handle(client):
     while True:
         estado = client.recv(1024).decode()
-        # print(estado + "aqui")
+        print(estado + " AQUI")
         if "resp_conexao" in estado:
             dados = estado.split('/')
             i = int(dados[2])
@@ -81,6 +82,7 @@ def handle(client):
             showConnections()
             break
         elif estado == "consulta":
+            print("Entrei na consulta")
             requested_name = client.recv(1024).decode()
             if requested_name == names[clients.index(client)]:
                 client.send("Nao e possivel conectar a si mesmo".encode())
@@ -90,6 +92,7 @@ def handle(client):
                 i = names.index(requested_name)
                 host, port = clients[i].getpeername()
                 #clients[i].send("pedido_conexao".encode())
+                print("Respondendo")
                 client.send(("endereco/" + str(host) + "/" + str(port) + "/" + names[clients.index(client)]).encode())
 
 def showConnections():

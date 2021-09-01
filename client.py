@@ -5,24 +5,23 @@ import time
 
 import call_client
 import ligacao_server
-from ligacao_server import *
+from ligacao_server import get_port
 from call_client import *
-import clientLigacao as clientLigacao
 
 def receive():
     global client
     client = socket(AF_INET, SOCK_STREAM)
     ip_info = ip.get()
     HOST = ip_info
-    PORT = 5001
+    PORT = 5003
     client.connect((HOST, PORT))
     client.send(name.get().encode())
     print("Antes do receive")
     message = client.recv(1024).decode()
-    print("passei aqui")
+    print("passei aqui" + message)
     if message == "Ja existe um usuario com o mesmo nome":
         write(message)
-    elif message == "Conectado ao servidor / end":
+    else:
         thread_server_call = threading.Thread(target=ligacao_server.init_call_server)
         thread_server_call.start()
         split = message.split("/")
@@ -43,7 +42,7 @@ def listen():
         message = client.recv(1024).decode()
         if "endereco" in message:
             dados = message.split('/')
-            call_client.request_connection(dados[1], dados[2])
+            call_client.request_connection(dados[1], dados[2], get_port())
         if 'pedido' in message:
             dados = message.split('/')
             write(dados[1] + "Deseja se conectar" + "\nDigite S para aceitar, ou N para recusar")
