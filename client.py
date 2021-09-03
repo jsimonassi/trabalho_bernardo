@@ -12,7 +12,7 @@ def receive():
     client = socket(AF_INET, SOCK_STREAM)
     ip_info = ip.get()
     HOST = ip_info
-    PORT = 5001
+    PORT = 5002
     client.connect((HOST, PORT))
     client.send(name.get().encode())
     message = client.recv(1024).decode()
@@ -31,7 +31,7 @@ def receive():
         screen.protocol("WM_DELETE_WINDOW", closeConnThread)
         thread = threading.Thread(target=listen)
         thread.start()
-        thread = threading.Thread(target=serverLigacao.iniciarServidorLigacao, args=split[1], )
+        thread = threading.Thread(target=serverLigacao.iniciarServidorLigacao, args=(str(split[1]),))
         thread.start()
 
 
