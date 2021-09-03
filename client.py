@@ -1,4 +1,3 @@
-import os
 from tkinter import *
 from socket import *
 import threading
@@ -12,7 +11,7 @@ def receive():
     client = socket(AF_INET, SOCK_STREAM)
     ip_info = ip.get()
     HOST = ip_info
-    PORT = 5005
+    PORT = 5012
     client.connect((HOST, PORT))
     client.send(name.get().encode())
     message = client.recv(1024).decode()
@@ -31,7 +30,7 @@ def receive():
         screen.protocol("WM_DELETE_WINDOW", closeConnThread)
         thread = threading.Thread(target=listen)
         thread.start()
-        thread = threading.Thread(target=serverLigacao.iniciarServidorLigacao, args=(str(split[1]),))
+        thread = threading.Thread(target=serverLigacao.iniciarServidorLigacao, args=(str(split[1]), popup))
         thread.start()
 
 
@@ -76,6 +75,7 @@ def listen():
             message = client.recv(1024).decode()
             write(message)
 
+
 def sendName():
     dest_info = dest.get()
     print("Chamando consulta")
@@ -117,6 +117,16 @@ def writeUsers(*message, end = "\n", sep = " "):
     users.delete('1.0', END)
     users.insert(INSERT, text)
     users.see(END)
+
+
+def popup(origem):
+    #TODO: Adicionar botoes de aceito/rejeito
+    #TODO: Criar métodos no server ligação para enviar resposta a origem
+    popup = Tk()
+    popup.geometry("300x300")
+    popup.title("Convite de chamada")
+    popup.mainloop()
+
 
 def main():
     global name

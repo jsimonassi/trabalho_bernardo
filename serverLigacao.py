@@ -1,9 +1,9 @@
 from socket import *
 
 
-def iniciarServidorLigacao(meuIp):
+def iniciarServidorLigacao(meuIp, callback):
     HOST = meuIp
-    PORT = 6002
+    PORT = 6011
     servidorUdp = socket(AF_INET, SOCK_DGRAM)
     orig = (HOST, PORT)
     servidorUdp.bind(orig)
@@ -17,11 +17,12 @@ def iniciarServidorLigacao(meuIp):
         print(origem, msg.decode())
         if "convite" in msg.decode():
             # TODO: As perguntas devem ser feitas via interface gráfica
-            resp = input("Você recebeu um convite de chamada. Deseja aceitar? (S/N)")
-            if "s" in resp or "S" in resp:
-                servidorUdp.sendto("resposta_ao_convite/aceito".encode(), origem)
-            else:
-                servidorUdp.sendto("resposta_ao_convite/rejeitado".encode(), origem)
+            #resp = input("Você recebeu um convite de chamada. Deseja aceitar? (S/N)")
+            callback(origem)
+            # if "s" in resp or "S" in resp:
+            #     servidorUdp.sendto("resposta_ao_convite/aceito".encode(), origem)
+            # else:
+            #     servidorUdp.sendto("resposta_ao_convite/rejeitado".encode(), origem)
 
         elif "encerrar_ligacao" in msg.decode():
             # TODO: Para de enviar o audio. A conexão não deve ser encerrada aqui

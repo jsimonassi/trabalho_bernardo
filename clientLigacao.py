@@ -6,13 +6,14 @@ import pyaudio
 def iniciaConexaoUDP(origem_ip, dest_ip, origem_name):
     print(" Destino: " + str(dest_ip))
     HOST = dest_ip
-    PORT = 6002
+    PORT = 6011
     conexaoUdp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     dest = (HOST, PORT)
-    thread = threading.Thread(target=ouvirResposta, args=(conexaoUdp,))
-    thread.start()
     print("Enviando convite")
     conexaoUdp.sendto(("convite/" + origem_name + " / " + origem_ip).encode(), dest)
+
+    thread = threading.Thread(target=ouvirResposta, args=(conexaoUdp,))
+    thread.start()
 
 
 def ouvirResposta(conexaoUdp):
