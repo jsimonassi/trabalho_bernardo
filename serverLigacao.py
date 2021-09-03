@@ -3,7 +3,7 @@ from socket import *
 
 def iniciarServidorLigacao(meuIp):
     HOST = meuIp
-    PORT = 6000
+    PORT = 6002
     servidorUdp = socket(AF_INET, SOCK_DGRAM)
     orig = (HOST, PORT)
     servidorUdp.bind(orig)

@@ -12,7 +12,7 @@ def receive():
     client = socket(AF_INET, SOCK_STREAM)
     ip_info = ip.get()
     HOST = ip_info
-    PORT = 5002
+    PORT = 5005
     client.connect((HOST, PORT))
     client.send(name.get().encode())
     message = client.recv(1024).decode()
@@ -78,6 +78,7 @@ def listen():
 
 def sendName():
     dest_info = dest.get()
+    print("Chamando consulta")
     client.send("consulta".encode())
     client.send(dest_info.encode())
 

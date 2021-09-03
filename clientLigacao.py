@@ -5,8 +5,8 @@ import pyaudio
 
 def iniciaConexaoUDP(origem_ip, dest_ip, origem_name):
     print(" Destino: " + str(dest_ip))
-    HOST = dest_ip['ip']
-    PORT = 6000
+    HOST = dest_ip
+    PORT = 6002
     conexaoUdp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     dest = (HOST, PORT)
     thread = threading.Thread(target=ouvirResposta, args=(conexaoUdp,))
