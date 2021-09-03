@@ -29,7 +29,7 @@ def receive():
             names.append(name)
             clients.append(client)
             print(f"Nome do cliente é: {name}")
-            client.send("Conectado ao servidor /" + address[0].encode())
+            client.send(("Conectado ao servidor /" + address[0]).encode())
             showConnections()
             stringNames = ''
             for i in names:

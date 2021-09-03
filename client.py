@@ -19,7 +19,7 @@ def receive():
     print("passei aqui " + message)
     if message == "Ja existe um usuario com o mesmo nome":
         write(message)
-    elif message in "Conectado ao servidor":
+    elif "Conectado ao servidor" in message:
         split = message.split("/")
         write(split[0])
         registrybtn['state'] = "disabled"
