@@ -1,29 +1,27 @@
+import os
 from tkinter import *
 from socket import *
 import threading
 import time
 
 import call_client
-import ligacao_server
-from ligacao_server import get_port
-from call_client import *
+
+import clientLigacao as clientLigacao
 
 def receive():
     global client
     client = socket(AF_INET, SOCK_STREAM)
     ip_info = ip.get()
     HOST = ip_info
-    PORT = 5003
+    PORT = 5001
     client.connect((HOST, PORT))
     client.send(name.get().encode())
     print("Antes do receive")
     message = client.recv(1024).decode()
-    print("passei aqui" + message)
+    print("passei aqui")
     if message == "Ja existe um usuario com o mesmo nome":
         write(message)
-    else:
-        thread_server_call = threading.Thread(target=ligacao_server.init_call_server)
-        thread_server_call.start()
+    elif message == "Conectado ao servidor / end":
         split = message.split("/")
         write(split[0])
         registrybtn['state'] = "disabled"
@@ -32,6 +30,7 @@ def receive():
         connectentry['state'] = "normal"
         endbtn['state'] = "active"
         ipentry['state'] = "disabled"
+        screen.protocol("WM_DELETE_WINDOW", closeConnThread)
         thread = threading.Thread(target=listen)
         thread.start()
 
@@ -42,7 +41,7 @@ def listen():
         message = client.recv(1024).decode()
         if "endereco" in message:
             dados = message.split('/')
-            call_client.request_connection(dados[1], dados[2], get_port())
+            call_client.request_connection(dados[1], dados[2], dados[3])
         if 'pedido' in message:
             dados = message.split('/')
             write(dados[1] + "Deseja se conectar" + "\nDigite S para aceitar, ou N para recusar")
