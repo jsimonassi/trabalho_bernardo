@@ -1,8 +1,9 @@
+import time
 from socket import *
 import threading
 
 HOST = "25.90.35.163"
-PORT = 5000
+PORT = 5001
 
 s = socket(AF_INET, SOCK_STREAM)
 s.bind((HOST, PORT))
@@ -13,6 +14,7 @@ names = []
 connections = []
 
 def broadcast(message):
+    time.sleep(0.5)
     for client in clients:
         client.send(("broadcast" "/" + message).encode())
 
@@ -27,7 +29,7 @@ def receive():
             names.append(name)
             clients.append(client)
             print(f"Nome do cliente é: {name}")
-            client.send("Conectado ao servidor / end".encode())
+            client.send("Conectado ao servidor /" + address[0].encode())
             showConnections()
             stringNames = ''
             for i in names:

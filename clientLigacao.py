@@ -1,15 +1,27 @@
-from tkinter import *
-from socket import *
+import socket
 import threading
-import time
+import pyaudio
 
-def iniciaConexaoUDP(ip, porta):
-    ligacao = socket(AF_INET, SOCK_DGRAM)
-    ligacao.connect((ip, porta))
-    # ligacao.sendto(("convite/" + dados[2] + '/' + dest.get()+ '/' + dados[1] + '/' + "6000").encode('ascii'), ('127.0.0.1', 6000))
-    resposta_ao_convite, addr = ligacao.recvfrom(1024)
-    resposta_ao_convite.decode()
-    '''if 'rejeitado' in resposta_ao_convite:
-        write("Usuario destino ocupado")
-    else:  # CONEXAO DE AUDIO
-        write("aceito")'''
+
+def iniciaConexaoUDP(origem_ip, dest_ip, origem_name):
+    print(" Destino: " + str(dest_ip))
+    HOST = dest_ip['ip']
+    PORT = 6000
+    conexaoUdp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    dest = (HOST, PORT)
+    thread = threading.Thread(target=ouvirResposta, args=(conexaoUdp,))
+    thread.start()
+    print("Enviando convite")
+    conexaoUdp.sendto(("convite/" + origem_name + " / " + origem_ip).encode(), dest)
+
+
+def ouvirResposta(conexaoUdp):
+    while True:
+        msg, endereco = conexaoUdp.recvfrom(1024)
+        print("Recebi essa mensagem: " + str(msg) + " Veio desse endereço: " + str(endereco))
+        #TODO: Os pacotes de audio devem chegar aqui tbm, tratar isso no futuro
+        if "aceito" in str(msg):
+            print("Iniciando chamada")
+            #TODO: Começar a mandar audio agora
+            # thread = threading.Thread(target=send_audio, args=(udp, addrress,))
+            # thread.start()

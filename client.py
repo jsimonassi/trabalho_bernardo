@@ -3,10 +3,9 @@ from tkinter import *
 from socket import *
 import threading
 import time
+import clientLigacao
+import serverLigacao
 
-import call_client
-
-import clientLigacao as clientLigacao
 
 def receive():
     global client
@@ -16,12 +15,11 @@ def receive():
     PORT = 5001
     client.connect((HOST, PORT))
     client.send(name.get().encode())
-    print("Antes do receive")
     message = client.recv(1024).decode()
-    print("passei aqui")
+    print("passei aqui " + message)
     if message == "Ja existe um usuario com o mesmo nome":
         write(message)
-    elif message == "Conectado ao servidor / end":
+    elif message in "Conectado ao servidor":
         split = message.split("/")
         write(split[0])
         registrybtn['state'] = "disabled"
@@ -33,6 +31,8 @@ def receive():
         screen.protocol("WM_DELETE_WINDOW", closeConnThread)
         thread = threading.Thread(target=listen)
         thread.start()
+        thread = threading.Thread(target=serverLigacao.iniciarServidorLigacao, args=split[1], )
+        thread.start()
 
 
 def listen():
@@ -40,8 +40,9 @@ def listen():
     while True:
         message = client.recv(1024).decode()
         if "endereco" in message:
+            print("RECEBI DO SERVER ESSES DADOS: " + str(message))
             dados = message.split('/')
-            call_client.request_connection(dados[1], dados[2], dados[3])
+            clientLigacao.iniciaConexaoUDP("Ainda não sei", dados[1], dados[3])
         if 'pedido' in message:
             dados = message.split('/')
             write(dados[1] + "Deseja se conectar" + "\nDigite S para aceitar, ou N para recusar")
